@@ -1,5 +1,17 @@
-using MarketData.Db;
+#define UseEF
+#if !UseEF
+#define UseMongo
+#endif
+#if UseEF
 using MarketData.Db.EF;
+using MarketData.Db.EF.Entities;
+#endif
+using MarketData.Db.Interfaces;
+#if UseMongo
+using MarketData.Db.Mongo;
+using MarketData.Db.Mongo.Entities;
+#endif
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +23,19 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services
-    .AddDbContext<MarketDataDbContext>()
-    .AddScoped<IMarketDataProvider, EFMarketDataProvider>();
+#if UseEF
+    .AddDbContextPool<MarketDataDbContext>(
+        builder => builder
+            .UseSqlServer(
+                @"Server=(localdb)\mssqllocaldb; Database=MarketData; Trusted_Connection=True; MultipleActiveResultSets=true",
+                options => options.UseDateOnlyTimeOnly())
+            .LogTo(Console.WriteLine))
+    .AddScoped<IMarketDataProvider<FundPrice>, EFMarketDataProvider>()
+#endif
+#if UseMongo
+    .AddScoped<IMarketDataProvider<FundPrice>, MongoMarketDataProvider>()
+#endif
+    ;
 
 var app = builder.Build();
 

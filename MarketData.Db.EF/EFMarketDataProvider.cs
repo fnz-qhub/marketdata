@@ -1,9 +1,10 @@
-﻿using MarketData.Db.Entities;
+﻿namespace MarketData.Db.EF;
+
+using MarketData.Db.EF.Entities;
+using MarketData.Db.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace MarketData.Db.EF;
-
-public class EFMarketDataProvider : IMarketDataProvider
+public class EFMarketDataProvider : IMarketDataProvider<FundPrice>
 {
     private readonly MarketDataDbContext dbContext;
 

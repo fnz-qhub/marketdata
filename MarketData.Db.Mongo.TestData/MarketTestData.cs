@@ -1,93 +1,89 @@
+namespace MarketData.Db.Mongo.TestData;
+
 using MarketData.Db.Entities;
+using MarketData.Db.Mongo.Entities;
 using MongoDB.Driver;
+using System;
 
-namespace MarketData.Db.Mongo.TestData
+public class MarketTestData : BaseMongoTest
 {
-    public class MarketTestData
+    public static IEnumerable<Fund> ExampleFunds
     {
-        [Fact]
-        public async Task Populate()
+        get
         {
-            var funds = new[]
+            yield return new()
             {
-                new Fund
-                {
-                    Id = 1L,
-                    Isin = "FR0010957852",
-                    Name = "BNP Paribas MidCap Europe",
-                    Class = FundClass.Equity,
-                },
-                new Fund
-                {
-                    Id = 2L,
-                    Isin = "LU0312383663",
-                    Name = "Pictet-Clean Energy",
-                    Class = FundClass.Equity,
-                },
-                new Fund
-                {
-                    Id = 3L,
-                    Isin = "LU1819949089",
-                    Name = "BNP Paribas Sustainable Enhanced Bond",
-                    Class = FundClass.Bond,
-                },
+                Id = 1L,
+                Isin = "FR0010957852",
+                Name = "BNP Paribas MidCap Europe",
+                Class = FundClass.Equity,
             };
-
-            var prices = new[]
+            yield return new()
             {
-                (1L, 22.64m, new DateOnly(2023, 10, 25)),
-                (1L, 23.12m, new DateOnly(2023, 10, 26)),
-                (1L, 23.78m, new DateOnly(2023, 10, 27)),
-                (1L, 21.89m, new DateOnly(2023, 10, 30)),
-                (1L, 22.02m, new DateOnly(2023, 10, 31)),
-                (1L, 23.41m, new DateOnly(2023, 11, 1)),
-                (2L, 132.767m, new DateOnly(2023, 10, 25)),
-                (2L, 129.361m, new DateOnly(2023, 10, 26)),
-                (2L, 133.291m, new DateOnly(2023, 10, 27)),
-                (2L, 135.499m, new DateOnly(2023, 10, 30)),
-                (2L, 133.987m, new DateOnly(2023, 10, 31)),
-                (2L, 132.344m, new DateOnly(2023, 11, 1)),
-                (3L, 1.0238m, new DateOnly(2023, 10, 25)),
-                (3L, 1.0198m, new DateOnly(2023, 10, 26)),
-                (3L, 1.0212m, new DateOnly(2023, 10, 27)),
-                (3L, 1.0287m, new DateOnly(2023, 10, 30)),
-                (3L, 1.0265m, new DateOnly(2023, 10, 31)),
-                (3L, 1.0232m, new DateOnly(2023, 11, 1)),
-            }.Select((priceDate, i) => new FundPrice
+                Id = 2L,
+                Isin = "LU0312383663",
+                Name = "Pictet-Clean Energy",
+                Class = FundClass.Equity,
+            };
+            yield return new()
             {
-                Id = i,
-                FundId = priceDate.Item1,
-                Price = priceDate.Item2,
-                PriceDate = priceDate.Item3,
-                Timestamp = DateTime.UtcNow
-            }).ToList();
-
-            var url = MongoUrl.Create(MongoMarketDataProvider.ConnectionString);
-            var clientSettings = MongoClientSettings.FromUrl(url);
-            var client = new MongoClient(clientSettings);
-            var database = client.GetDatabase(url.DatabaseName);
-
-            var fundCollection = database.GetCollection<Fund>(MongoMarketDataProvider.FundCollectionName);
-            await fundCollection.InsertManyAsync(funds);
-
-            var fundPriceCollection = database.GetCollection<FundPrice>(MongoMarketDataProvider.FundPriceCollectionName);
-            await fundPriceCollection.InsertManyAsync(prices);
+                Id = 3L,
+                Isin = "LU1819949089",
+                Name = "BNP Paribas Sustainable Enhanced Bond",
+                Class = FundClass.Bond,
+            };
         }
+    }
 
-        [Fact]
-        public async Task RemoveAll()
+    public static IEnumerable<FundPrice> ExampleFundPrices
+    {
+        get
         {
-            var url = MongoUrl.Create(MongoMarketDataProvider.ConnectionString);
-            var clientSettings = MongoClientSettings.FromUrl(url);
-            var client = new MongoClient(clientSettings);
-            var database = client.GetDatabase(url.DatabaseName);
-
-            var fundCollection = database.GetCollection<Fund>(MongoMarketDataProvider.FundCollectionName);
-            var fundPriceCollection = database.GetCollection<FundPrice>(MongoMarketDataProvider.FundPriceCollectionName);
-
-            await fundCollection.DeleteManyAsync(Builders<Fund>.Filter.Empty);
-            await fundPriceCollection.DeleteManyAsync(Builders<FundPrice>.Filter.Empty);
+            var i = 0L;
+            yield return new(i++, 1L, 22.64m, new DateOnly(2023, 10, 25));
+            yield return new(i++, 1L, 23.12m, new DateOnly(2023, 10, 26));
+            yield return new(i++, 1L, 23.78m, new DateOnly(2023, 10, 27));
+            yield return new(i++, 1L, 21.89m, new DateOnly(2023, 10, 30));
+            yield return new(i++, 1L, 22.02m, new DateOnly(2023, 10, 31));
+            yield return new(i++, 1L, 23.41m, new DateOnly(2023, 11, 1));
+            yield return new(i++, 2L, 132.767m, new DateOnly(2023, 10, 25));
+            yield return new(i++, 2L, 129.361m, new DateOnly(2023, 10, 26));
+            yield return new(i++, 2L, 133.291m, new DateOnly(2023, 10, 27));
+            yield return new(i++, 2L, 135.499m, new DateOnly(2023, 10, 30));
+            yield return new(i++, 2L, 133.987m, new DateOnly(2023, 10, 31));
+            yield return new(i++, 2L, 132.344m, new DateOnly(2023, 11, 1));
+            yield return new(i++, 3L, 1.0238m, new DateOnly(2023, 10, 25));
+            yield return new(i++, 3L, 1.0198m, new DateOnly(2023, 10, 26));
+            yield return new(i++, 3L, 1.0212m, new DateOnly(2023, 10, 27));
+            yield return new(i++, 3L, 1.0287m, new DateOnly(2023, 10, 30));
+            yield return new(i++, 3L, 1.0265m, new DateOnly(2023, 10, 31));
+            yield return new(i++, 3L, 1.0232m, new DateOnly(2023, 11, 1));
         }
+    }
 
+    [Fact]
+    public async Task Populate()
+    {
+        await FundCollection.InsertManyAsync(ExampleFunds);
+        await FundPriceCollection.InsertManyAsync(ExampleFundPrices);
+
+        var fundCount = await FundCollection.EstimatedDocumentCountAsync();
+        var fundPriceCount = await FundPriceCollection.EstimatedDocumentCountAsync();
+
+        Assert.Equal(3, fundCount);
+        Assert.Equal(18, fundPriceCount);
+    }
+
+    [Fact]
+    public async Task RemoveAll()
+    {
+        await FundCollection.DeleteManyAsync(Builders<Fund>.Filter.Empty);
+        await FundPriceCollection.DeleteManyAsync(Builders<FundPrice>.Filter.Empty);
+
+        var fundCount = await FundCollection.EstimatedDocumentCountAsync();
+        var fundPriceCount = await FundPriceCollection.EstimatedDocumentCountAsync();
+
+        Assert.Equal(0, fundCount);
+        Assert.Equal(0, fundPriceCount);
     }
 }
