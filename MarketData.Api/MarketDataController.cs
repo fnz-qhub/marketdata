@@ -1,32 +1,21 @@
-﻿#define UseEF
-#if !UseEF
-#define UseMongo
-#endif
-namespace MarketData.Api;
+﻿namespace MarketData.Api;
 
+using MarketData.Api.ApiModels;
 using MarketData.Db.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-#if UseEF
-using FundPrice = Db.EF.Entities.FundPrice;
-#endif
-#if UseMongo
-using FundPrice = Db.Mongo.Entities.FundPrice;
-#endif
 
 [ApiController]
 [Route("marketdata")]
 public class MarketDataController : ControllerBase
 {
-    private readonly IMarketDataProvider<FundPrice> marketDataProvider;
+    private readonly IMarketDataProvider marketDataProvider;
 
-    public MarketDataController(IMarketDataProvider<FundPrice> marketDataProvider)
-    {
-        this.marketDataProvider = marketDataProvider;
-    }
+    public MarketDataController(IMarketDataProvider marketDataProvider)
+        => this.marketDataProvider = marketDataProvider;
 
     [HttpGet("{isin}/latest")]
-    public async Task<ActionResult<FundPrice>> GetLatestFundPrice(string isin)
-    {
-        return Ok(await marketDataProvider.GetLatestPrice(isin));
-    }
+    [Produces(typeof(ApiFundPrice))]
+    [ProducesResponseType(204)]
+    public async Task<ActionResult<ApiFundPrice>> GetLatestFundPrice(string isin)
+        => Ok(await marketDataProvider.GetLatestPrice(isin));
 }

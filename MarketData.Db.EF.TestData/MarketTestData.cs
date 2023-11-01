@@ -78,7 +78,7 @@ public class MarketTestData : EFBaseTest
     {
         await using var db = GetDbContext();
         await db.Funds.AddRangeAsync(ExampleFunds);
-        await db.SaveChangesAsync();
+        _ = await db.SaveChangesAsync();
 
         db.ChangeTracker.Clear();
         var count = await db.Funds.CountAsync();
@@ -90,7 +90,7 @@ public class MarketTestData : EFBaseTest
     public async Task RemoveAll()
     {
         await using var db = GetDbContext();
-        await db.Funds.ExecuteDeleteAsync();
+        _ = await db.Funds.ExecuteDeleteAsync();
 
         db.ChangeTracker.Clear();
         var count = await db.Funds.CountAsync();

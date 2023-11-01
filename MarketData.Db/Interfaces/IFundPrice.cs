@@ -6,11 +6,6 @@
 public interface IFundPrice
 {
     /// <summary>
-    /// Price identifier.
-    /// </summary>
-    long Id { get; set; }
-
-    /// <summary>
     /// Fund identifier.
     /// </summary>
     long FundId { get; set; }
@@ -29,4 +24,17 @@ public interface IFundPrice
     /// The date the price was published (a.k.a. "NAV date").
     /// </summary>
     DateOnly PriceDate { get; init; }
+}
+
+/// <summary>
+/// An interface for fund prices with an Id of type <typeparamref name="TId"/>.
+/// </summary>
+/// <typeparam name="TId">The type of the identifier.</typeparam>
+public interface IFundPrice<TId> : IFundPrice
+    where TId : IEquatable<TId>, IComparable<TId>
+{
+	/// <summary>
+	/// Price identifier.
+	/// </summary>
+	TId Id { get; set; }
 }

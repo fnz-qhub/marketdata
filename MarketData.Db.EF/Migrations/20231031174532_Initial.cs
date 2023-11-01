@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
+﻿#nullable disable
 
 namespace MarketData.Db.EF.Migrations;
+using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 /// <inheritdoc />
 public partial class Initial : Migration
@@ -11,7 +10,7 @@ public partial class Initial : Migration
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
-        migrationBuilder.CreateTable(
+        _ = migrationBuilder.CreateTable(
             name: "Funds",
             columns: table => new
             {
@@ -23,10 +22,10 @@ public partial class Initial : Migration
             },
             constraints: table =>
             {
-                table.PrimaryKey("PK_Funds", x => x.Id);
+                _ = table.PrimaryKey("PK_Funds", x => x.Id);
             });
 
-        migrationBuilder.CreateTable(
+        _ = migrationBuilder.CreateTable(
             name: "Prices",
             columns: table => new
             {
@@ -39,8 +38,8 @@ public partial class Initial : Migration
             },
             constraints: table =>
             {
-                table.PrimaryKey("PK_Prices", x => x.Id);
-                table.ForeignKey(
+                _ = table.PrimaryKey("PK_Prices", x => x.Id);
+                _ = table.ForeignKey(
                     name: "FK_Prices_Funds_FundId",
                     column: x => x.FundId,
                     principalTable: "Funds",
@@ -48,13 +47,13 @@ public partial class Initial : Migration
                     onDelete: ReferentialAction.Cascade);
             });
 
-        migrationBuilder.CreateIndex(
+        _ = migrationBuilder.CreateIndex(
             name: "IX_Funds_Isin",
             table: "Funds",
             column: "Isin",
             unique: true);
 
-        migrationBuilder.CreateIndex(
+        _ = migrationBuilder.CreateIndex(
             name: "IX_Prices_FundId",
             table: "Prices",
             column: "FundId");
@@ -63,10 +62,10 @@ public partial class Initial : Migration
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
-        migrationBuilder.DropTable(
+        _ = migrationBuilder.DropTable(
             name: "Prices");
 
-        migrationBuilder.DropTable(
+        _ = migrationBuilder.DropTable(
             name: "Funds");
     }
 }

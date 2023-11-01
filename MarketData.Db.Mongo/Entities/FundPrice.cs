@@ -1,10 +1,11 @@
 ﻿namespace MarketData.Db.Mongo.Entities;
 
 using MarketData.Db.Interfaces;
+using MongoDB.Bson;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
-public record FundPrice : IFundPrice
+public record FundPrice : IFundPrice<ObjectId>
 {
     public FundPrice()
     {
@@ -18,15 +19,8 @@ public record FundPrice : IFundPrice
         PriceDate = priceDate;
     }
 
-    [SetsRequiredMembers]
-    public FundPrice(long id, long fundId, decimal price, DateOnly priceDate)
-        : this(fundId, price, priceDate)
-        => Id = id;
-
-    /// <summary>
-    /// Price identifier.
-    /// </summary>
-    public long Id { get; set; }
+    /// <inheritdoc />
+    public ObjectId Id { get; set; }
 
     /// <summary>
     /// Fund identifier.

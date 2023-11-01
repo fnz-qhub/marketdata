@@ -1,7 +1,7 @@
-﻿using MarketData.Db.EF.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿namespace MarketData.Db.EF;
 
-namespace MarketData.Db.EF;
+using MarketData.Db.EF.Entities;
+using Microsoft.EntityFrameworkCore;
 
 public class MarketDataDbContext : DbContext
 {

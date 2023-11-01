@@ -1,10 +1,9 @@
-﻿using MarketData.Db.Interfaces;
+﻿namespace MarketData.Db.Mongo;
+using MarketData.Db.Interfaces;
 using MarketData.Db.Mongo.Entities;
 using MongoDB.Driver;
 
-namespace MarketData.Db.Mongo;
-
-public class MongoMarketDataProvider : IMarketDataProvider<FundPrice>
+public class MongoMarketDataProvider : IMarketDataProvider
 {
     public const string FundCollectionName = "Funds";
     public const string FundPriceCollectionName = "FundPrices";
@@ -14,7 +13,7 @@ public class MongoMarketDataProvider : IMarketDataProvider<FundPrice>
     public MongoMarketDataProvider(IMongoDatabase database)
         => this.database = database;
 
-    public Task<FundPrice?> GetLatestPrice(string isin)
+    public Task<IFundPrice?> GetLatestPrice(string isin)
     {
         var fundCollection = database.GetCollection<Fund>(FundCollectionName);
         var fund = fundCollection.AsQueryable()
@@ -22,7 +21,7 @@ public class MongoMarketDataProvider : IMarketDataProvider<FundPrice>
             .SingleOrDefault();
 
         if (fund == null)
-            return Task.FromResult<FundPrice?>(null);
+            return Task.FromResult<IFundPrice?>(null);
 
         var fundPriceCollection = database.GetCollection<FundPrice>(FundPriceCollectionName);
         var price = fundPriceCollection.AsQueryable()
@@ -31,21 +30,15 @@ public class MongoMarketDataProvider : IMarketDataProvider<FundPrice>
             .ThenByDescending(x => x.Timestamp)
             .FirstOrDefault();
 
-        return Task.FromResult(price);
+        return Task.FromResult((IFundPrice?)price);
     }
 
-    public Task<FundPrice?> GetLatestPriceForDate(string isin, DateOnly priceDate)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<IFundPrice?> GetLatestPriceForDate(string isin, DateOnly priceDate)
+        => throw new NotImplementedException();
 
-    public Task<IList<FundPrice>> GetLatestPrices(string isin, int ndays)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<IList<IFundPrice>> GetLatestPrices(string isin, int ndays)
+        => throw new NotImplementedException();
 
-    public Task<FundPrice> InsertPrice(FundPrice fundPrice)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<IFundPrice> InsertPrice(IFundPrice fundPrice)
+        => throw new NotImplementedException();
 }

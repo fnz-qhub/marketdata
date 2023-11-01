@@ -6,22 +6,26 @@ using Microsoft.EntityFrameworkCore;
 public abstract class EFBaseTest : IDisposable
 {
     private const string InMemoryConnectionString = "DataSource=:memory:";
-    private readonly SqliteConnection connection = new SqliteConnection(InMemoryConnectionString);
+    private readonly SqliteConnection connection = new(InMemoryConnectionString);
 
     protected EFBaseTest()
     {
         connection.Open();
         using var db = GetDbContext();
-        db.Database.EnsureCreated();
+        _ = db.Database.EnsureCreated();
     }
 
     protected MarketDataDbContext GetDbContext()
     {
         var builder = new DbContextOptionsBuilder<MarketDataDbContext>();
-        builder.UseSqlite(connection);
+        _ = builder.UseSqlite(connection);
         var options = builder.Options;
         return new MarketDataDbContext(options);
     }
 
-    public void Dispose() => connection.Dispose();
+    public void Dispose()
+    {
+        connection.Dispose();
+        GC.SuppressFinalize(this);
+    }
 }

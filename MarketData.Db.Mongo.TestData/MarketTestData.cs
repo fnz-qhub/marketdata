@@ -39,25 +39,24 @@ public class MarketTestData : BaseMongoTest
     {
         get
         {
-            var i = 0L;
-            yield return new(i++, 1L, 22.64m, new DateOnly(2023, 10, 25));
-            yield return new(i++, 1L, 23.12m, new DateOnly(2023, 10, 26));
-            yield return new(i++, 1L, 23.78m, new DateOnly(2023, 10, 27));
-            yield return new(i++, 1L, 21.89m, new DateOnly(2023, 10, 30));
-            yield return new(i++, 1L, 22.02m, new DateOnly(2023, 10, 31));
-            yield return new(i++, 1L, 23.41m, new DateOnly(2023, 11, 1));
-            yield return new(i++, 2L, 132.767m, new DateOnly(2023, 10, 25));
-            yield return new(i++, 2L, 129.361m, new DateOnly(2023, 10, 26));
-            yield return new(i++, 2L, 133.291m, new DateOnly(2023, 10, 27));
-            yield return new(i++, 2L, 135.499m, new DateOnly(2023, 10, 30));
-            yield return new(i++, 2L, 133.987m, new DateOnly(2023, 10, 31));
-            yield return new(i++, 2L, 132.344m, new DateOnly(2023, 11, 1));
-            yield return new(i++, 3L, 1.0238m, new DateOnly(2023, 10, 25));
-            yield return new(i++, 3L, 1.0198m, new DateOnly(2023, 10, 26));
-            yield return new(i++, 3L, 1.0212m, new DateOnly(2023, 10, 27));
-            yield return new(i++, 3L, 1.0287m, new DateOnly(2023, 10, 30));
-            yield return new(i++, 3L, 1.0265m, new DateOnly(2023, 10, 31));
-            yield return new(i++, 3L, 1.0232m, new DateOnly(2023, 11, 1));
+            yield return new(1L, 22.64m, new DateOnly(2023, 10, 25));
+            yield return new(1L, 23.12m, new DateOnly(2023, 10, 26));
+            yield return new(1L, 23.78m, new DateOnly(2023, 10, 27));
+            yield return new(1L, 21.89m, new DateOnly(2023, 10, 30));
+            yield return new(1L, 22.02m, new DateOnly(2023, 10, 31));
+            yield return new(1L, 23.41m, new DateOnly(2023, 11, 1));
+            yield return new(2L, 132.767m, new DateOnly(2023, 10, 25));
+            yield return new(2L, 129.361m, new DateOnly(2023, 10, 26));
+            yield return new(2L, 133.291m, new DateOnly(2023, 10, 27));
+            yield return new(2L, 135.499m, new DateOnly(2023, 10, 30));
+            yield return new(2L, 133.987m, new DateOnly(2023, 10, 31));
+            yield return new(2L, 132.344m, new DateOnly(2023, 11, 1));
+            yield return new(3L, 1.0238m, new DateOnly(2023, 10, 25));
+            yield return new(3L, 1.0198m, new DateOnly(2023, 10, 26));
+            yield return new(3L, 1.0212m, new DateOnly(2023, 10, 27));
+            yield return new(3L, 1.0287m, new DateOnly(2023, 10, 30));
+            yield return new(3L, 1.0265m, new DateOnly(2023, 10, 31));
+            yield return new(3L, 1.0232m, new DateOnly(2023, 11, 1));
         }
     }
 
@@ -77,8 +76,8 @@ public class MarketTestData : BaseMongoTest
     [Fact]
     public async Task RemoveAll()
     {
-        await FundCollection.DeleteManyAsync(Builders<Fund>.Filter.Empty);
-        await FundPriceCollection.DeleteManyAsync(Builders<FundPrice>.Filter.Empty);
+        _ = await FundCollection.DeleteManyAsync(Builders<Fund>.Filter.Empty);
+        _ = await FundPriceCollection.DeleteManyAsync(Builders<FundPrice>.Filter.Empty);
 
         var fundCount = await FundCollection.EstimatedDocumentCountAsync();
         var fundPriceCount = await FundPriceCollection.EstimatedDocumentCountAsync();

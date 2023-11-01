@@ -8,7 +8,7 @@ public class EFMarketDataProviderTests : EFBaseTest
         await using (var dbInner = GetDbContext())
         {
             await dbInner.Funds.AddRangeAsync(MarketTestData.ExampleFunds);
-            await dbInner.SaveChangesAsync();
+            _ = await dbInner.SaveChangesAsync();
         }
 
         await using var db = GetDbContext();
