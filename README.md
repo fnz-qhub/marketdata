@@ -43,6 +43,7 @@ You can create the database and user using `sqlcmd`:
 You can toggle which database is used in the API project using the `#define` statements at the top of `Program.cs`
 
 When using SQL Server (full or LocalDb) then you will need to apply migrations to confgure the database schema. 
+* If the dotnet-ef tool is not installed, then run `dotnet tool install --global dotnet-ef`
 * To apply migrations to LocalDb:
 ```
 cd MarketData.Db.EF
