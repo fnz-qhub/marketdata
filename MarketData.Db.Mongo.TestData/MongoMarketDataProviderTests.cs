@@ -1,7 +1,29 @@
 ﻿namespace MarketData.Db.Mongo.TestData;
 
+using MarketData.Db.Entities;
+using MarketData.Db.Mongo.Entities;
+
 public class MongoMarketDataProviderTests : BaseMongoTest
 {
+    [Fact]
+    public async Task CanInsertFund()
+    {
+        // Arrange
+        var fund = new Fund
+        {
+            Class = FundClass.Equity,
+            Isin = "EXAMPLE",
+            Name = "Example Equity",
+        };
+        var provider = new MongoMarketDataProvider(Database);
+
+        // Act
+        await provider.InsertFund(fund);
+
+        // Assert
+        Assert.NotEqual(0, FundCollection.EstimatedDocumentCount());
+    }
+
     [Fact]
     public async Task CheckLatestPrices()
     {

@@ -1,5 +1,6 @@
 ﻿namespace MarketData.Db.EF;
 
+using MarketData.Db.EF.Entities;
 using MarketData.Db.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,20 @@ public class EFMarketDataProvider : IMarketDataProvider
     private readonly MarketDataDbContext dbContext;
 
     public EFMarketDataProvider(MarketDataDbContext dbContext) => this.dbContext = dbContext;
+
+    public async Task<IFund> InsertFund(IFund fund)
+    {
+        var newFund = new Fund {
+            Class = fund.Class,
+            Isin = fund.Isin,
+            Name = fund.Name,
+        };
+
+        _ = await dbContext.AddAsync(newFund);
+        _ = await dbContext.SaveChangesAsync();
+
+        return newFund;
+    }
 
     public async Task<IFundPrice?> GetLatestPrice(string isin)
     {

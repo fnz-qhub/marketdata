@@ -6,6 +6,13 @@
 public interface IMarketDataProvider
 {
     /// <summary>
+    /// Insert a new func.
+    /// </summary>
+    /// <param name="fund">The fund to insert.</param>
+    /// <returns>The updated fund entity.</returns>
+    Task<IFund> InsertFund(IFund fund);
+
+    /// <summary>
     /// Insert a new price.
     /// </summary>
     /// <param name="fundPrice">The price to insert.</param>
