@@ -1,24 +1,21 @@
-﻿using MarketData.Db;
-using MarketData.Db.Entities;
+﻿namespace MarketData.Api;
+
+using MarketData.Api.ApiModels;
+using MarketData.Db.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MarketData.Api
+[ApiController]
+[Route("marketdata")]
+public class MarketDataController : ControllerBase
 {
-    [ApiController]
-    [Route("marketdata")]
-    public class MarketDataController : ControllerBase
-    {
-        private readonly IMarketDataProvider marketDataProvider;
+    private readonly IMarketDataProvider marketDataProvider;
 
-        public MarketDataController(IMarketDataProvider marketDataProvider)
-        {
-            this.marketDataProvider = marketDataProvider;
-        }
+    public MarketDataController(IMarketDataProvider marketDataProvider)
+        => this.marketDataProvider = marketDataProvider;
 
-        [HttpGet("{isin}/latest")]
-        public async Task<ActionResult<FundPrice>> GetLatestFundPrice(string isin)
-        {
-            return Ok(await marketDataProvider.GetLatestPrice(isin));
-        }
-    }
+    [HttpGet("{isin}/latest")]
+    [Produces(typeof(ApiFundPrice))]
+    [ProducesResponseType(204)]
+    public async Task<ActionResult<ApiFundPrice>> GetLatestFundPrice(string isin)
+        => Ok(await marketDataProvider.GetLatestPrice(isin));
 }

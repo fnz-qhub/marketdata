@@ -1,7 +1,8 @@
-﻿using MarketData.Db.Entities;
+﻿namespace MarketData.Db.Interfaces;
 
-namespace MarketData.Db;
-
+/// <summary>
+/// An interface for market data providers.
+/// </summary>
 public interface IMarketDataProvider
 {
     /// <summary>
@@ -9,14 +10,14 @@ public interface IMarketDataProvider
     /// </summary>
     /// <param name="fundPrice">The price to insert.</param>
     /// <returns>The updated price entity.</returns>
-    Task<FundPrice> InsertPrice(FundPrice fundPrice);
+    Task<IFundPrice> InsertPrice(IFundPrice fundPrice);
 
     /// <summary>
     /// Get latest price for a given fund (identified by an ISIN).
     /// </summary>
     /// <param name="isin">ISIN of the fund.</param>
     /// <returns>Latest price for the fund.</returns>
-    Task<FundPrice?> GetLatestPrice(string isin);
+    Task<IFundPrice?> GetLatestPrice(string isin);
 
     /// <summary>
     /// Get latest price for a given fund (identified by an ISIN) and a given price date.
@@ -24,7 +25,7 @@ public interface IMarketDataProvider
     /// <param name="isin">ISIN of the fund.</param>
     /// <param name="priceDate">The price date of the price we need.</param>
     /// <returns>Latest price for the fund.</returns>
-    Task<FundPrice?> GetLatestPriceForDate(string isin, DateOnly priceDate);
+    Task<IFundPrice?> GetLatestPriceForDate(string isin, DateOnly priceDate);
 
     /// <summary>
     /// Get latest prices for a fund (identified by an ISIN).
@@ -32,6 +33,6 @@ public interface IMarketDataProvider
     /// </summary>
     /// <param name="isin">ISIN of the fund.</param>
     /// <param name="ndays">Number of last price dates to include.</param>
-    /// <returns></returns>
-    Task<IList<FundPrice>> GetLatestPrices(string isin, int ndays);
+    /// <returns>Latest N daily prices for specified fund.</returns>
+    Task<IList<IFundPrice>> GetLatestPrices(string isin, int ndays);
 }

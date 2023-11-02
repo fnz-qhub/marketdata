@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace MarketData.Db.EF.Entities;
 
-namespace MarketData.Db.Entities;
+using MarketData.Db.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public record FundPrice
+public record FundPrice : IFundPrice
 {
     /// <summary>
     /// Price identifier.
@@ -29,4 +30,10 @@ public record FundPrice
     /// The date the price was published (a.k.a. "NAV date").
     /// </summary>
     public required DateOnly PriceDate { get; init; }
+
+    /// <summary>
+    /// Gets or sets the fund.
+    /// </summary>
+    [ForeignKey(nameof(FundId))]
+    public Fund? Fund { get; set; }
 }

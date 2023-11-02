@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MarketData.Db.EF\MarketData.Db.EF.csproj" />
+    <ProjectReference Include="..\MarketData.Db.Mongo\MarketData.Db.Mongo.csproj" />
     <ProjectReference Include="..\MarketData.Db\MarketData.Db.csproj" />
   </ItemGroup>
 

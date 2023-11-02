@@ -1,11 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace MarketData.Db.Mongo.Entities;
 
-namespace MarketData.Db.Entities;
+using MarketData.Db.Entities;
+using MarketData.Db.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 /// <summary>
 /// Fund entity.
 /// </summary>
-public record Fund
+public record Fund : IFund
 {
     /// <summary>
     /// Fund identifier.
@@ -27,9 +29,4 @@ public record Fund
     /// Fund class.
     /// </summary>
     public required FundClass Class { get; init; }
-
-    /// <summary>
-    /// Fund prices.
-    /// </summary>
-    public IList<FundPrice> Prices { get; init; } = new List<FundPrice>();
 }

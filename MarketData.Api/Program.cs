@@ -1,18 +1,48 @@
-using MarketData.Db;
+#define UseEF
+#define UseLocalDb
+#if !UseEF
+#define UseMongo
+#endif
+#if UseEF
 using MarketData.Db.EF;
+#endif
+using MarketData.Db.Interfaces;
+#if UseMongo
+using MarketData.Db.Mongo;
+#endif
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services
-    .AddDbContext<MarketDataDbContext>()
-    .AddScoped<IMarketDataProvider, EFMarketDataProvider>();
+#if UseEF
+    .AddDbContextPool<MarketDataDbContext>(
+        optionBuilder => optionBuilder
+            .UseSqlServer(
+#if UseLocalDb
+                builder.Configuration.GetConnectionString("LocalDb"), // NB: Swap for next line to use full SQL Server instance
+#else
+                builder.Configuration.GetConnectionString("SqlServer"),
+#endif
+                options => options.UseDateOnlyTimeOnly())
+            .LogTo(Console.WriteLine))
+    .AddScoped<IMarketDataProvider, EFMarketDataProvider>()
+#endif
+#if UseMongo
+    .AddSingleton(MongoUrl.Create(builder.Configuration.GetConnectionString("MongoDb")))
+    .AddSingleton(services => MongoClientSettings.FromUrl(services.GetRequiredService<MongoUrl>()))
+    .AddSingleton(services => new MongoClient(services.GetRequiredService<MongoClientSettings>()))
+    .AddSingleton(services => services.GetRequiredService<MongoClient>().GetDatabase(services.GetRequiredService<MongoUrl>().DatabaseName))
+    .AddScoped<IMarketDataProvider, MongoMarketDataProvider>()
+#endif
+    ;
 
 var app = builder.Build();
 
