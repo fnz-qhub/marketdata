@@ -13,6 +13,21 @@ public class MongoMarketDataProvider : IMarketDataProvider
     public MongoMarketDataProvider(IMongoDatabase database)
         => this.database = database;
 
+    public async Task<IFund> InsertFund(IFund fund)
+    {
+        var fundCollection = database.GetCollection<Fund>(FundCollectionName);
+
+        var newFund = new Fund {
+            Class = fund.Class,
+            Isin = fund.Isin,
+            Name = fund.Name,
+        };
+
+        await fundCollection.InsertOneAsync(newFund);
+
+        return newFund;
+    }
+
     public Task<IFundPrice?> GetLatestPrice(string isin)
     {
         var fundCollection = database.GetCollection<Fund>(FundCollectionName);

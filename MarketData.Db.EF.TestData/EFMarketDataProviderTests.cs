@@ -1,7 +1,29 @@
 ﻿namespace MarketData.Db.EF.TestData;
 
+using MarketData.Db.EF.Entities;
+
 public class EFMarketDataProviderTests : EFBaseTest
 {
+    [Fact]
+    public async Task CanInsertFund()
+    {
+        // Arrange
+        var fund = new Fund {
+            Class = Db.Entities.FundClass.Equity,
+            Isin = "EXAMPLE",
+            Name = "Example Equity",
+        };
+        await using var db = GetDbContext();
+        var provider = new EFMarketDataProvider(db);
+
+        // Act
+        await provider.InsertFund(fund);
+        db.ChangeTracker.Clear();
+
+        // Assert
+        Assert.NotEmpty(db.Funds);
+    }
+
     [Fact]
     public async Task CheckLatestPrices()
     {
